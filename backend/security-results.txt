@@ -1,0 +1,78 @@
+﻿============================================================
+  EXPENSE TRACKER ΓÇö SECURITY ATTACK SUITE
+  Target: http://127.0.0.1:5000/api
+  Time: 9/4/2026, 12:42:18 pm
+============================================================
+
+≡ƒöì Testing Security Headers...
+≡ƒöì Testing NoSQL Injection...
+≡ƒöì Testing Authentication Bypass...
+≡ƒöì Testing Mass Assignment...
+≡ƒöì Testing Large Payload Attack...
+≡ƒöì Testing XSS Input Handling...
+≡ƒöì Testing CORS Policy...
+≡ƒöì Testing Rate Limiting on Auth...
+≡ƒöì Testing Path Traversal...
+≡ƒöì Testing Invalid ObjectId Handling...
+≡ƒöì Testing OTP Bypass...
+
+============================================================
+  SECURITY TEST RESULTS
+============================================================
+
+   1. Γ£à PASS  X-Content-Type-Options header
+      ΓööΓöÇ nosniff
+   2. Γ£à PASS  X-Frame-Options / CSP frame-ancestors
+      ΓööΓöÇ SAMEORIGIN
+   3. Γ£à PASS  Strict-Transport-Security header
+      ΓööΓöÇ max-age=31536000; includeSubDomains
+   4. Γ£à PASS  X-Powered-By hidden
+      ΓööΓöÇ Hidden
+   5. Γ£à PASS  Content-Security-Policy header
+      ΓööΓöÇ Present
+   6. Γ£à PASS  NoSQL Injection on login ($ne bypass)
+      ΓööΓöÇ Status: 429 ΓÇö Too many login attempts, please try again after 15 minutes.
+   7. Γ£à PASS  NoSQL Injection ($gt operator)
+      ΓööΓöÇ Status: 429 ΓÇö Too many login attempts, please try again after 15 minutes.
+   8. Γ£à PASS  NoSQL Injection ($where clause)
+      ΓööΓöÇ Status: 429 ΓÇö Too many login attempts, please try again after 15 minutes.
+   9. Γ£à PASS  Access expenses without token
+      ΓööΓöÇ Status: 401 ΓÇö No token
+  10. Γ£à PASS  Access portfolio without token
+      ΓööΓöÇ Status: 401
+  11. Γ£à PASS  Access with forged JWT token
+      ΓööΓöÇ Status: 401 ΓÇö Invalid token
+  12. Γ£à PASS  Access with tampered JWT signature
+      ΓööΓöÇ Status: 401
+  13. Γ£à PASS  Access with empty Authorization header
+      ΓööΓöÇ Status: 401
+  14. Γ£à PASS  Mass assignment blocked (no auth)
+      ΓööΓöÇ Status: 401
+  15. Γ£à PASS  Large payload rejected (50KB body)
+      ΓööΓöÇ Status: 413 ΓÇö Payload too large
+  16. Γ£à PASS  XSS in registration name field
+      ΓööΓöÇ Status: 429 ΓÇö Server didn't crash
+  17. Γ£à PASS  CORS blocks unauthorized origin
+      ΓööΓöÇ Access-Control-Allow-Origin: http://localhost:3000
+  18. Γ£à PASS  Rate limiting on auth endpoints
+      ΓööΓöÇ Blocked after rapid requests (429)
+  19. Γ£à PASS  Path traversal in report range param
+      ΓööΓöÇ Status: 404 ΓÇö No file leak
+  20. Γ£à PASS  Invalid ObjectId doesn't crash server
+      ΓööΓöÇ Status: 401 ΓÇö Server still running
+  21. Γ¥î FAIL  OTP verification without prior login
+      ΓööΓöÇ Status: 429 ΓÇö Too many login attempts, please try again after 15 minutes.
+  22. Γ£à PASS  Brute force OTP rejected
+      ΓööΓöÇ Status: 429 ΓÇö Too many login attempts, please try again after 15 minutes.
+
+ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇ
+
+  TOTAL TESTS:  22
+  PASSED:       21 Γ£à
+  FAILED:       1 Γ¥î
+  SCORE:        95/100
+  GRADE:        A+
+
+  ≡ƒÅå EXCELLENT! Your app is well-secured.
+
+============================================================
