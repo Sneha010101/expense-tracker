@@ -4,16 +4,16 @@ const sendEmail = async (email, otp) => {
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
-      user: "yourgmail@gmail.com",
-      pass: "your_app_password",
+      user: process.env.EMAIL_USER,
+      pass: process.env.EMAIL_PASS,
     },
   });
 
   await transporter.sendMail({
-    from: "Expense Tracker",
+    from: `"Expense Tracker" <${process.env.EMAIL_USER}>`,
     to: email,
-    subject: "OTP Verification",
-    text: `Your OTP is ${otp}`,
+    subject: "Expense Tracker - OTP Verification",
+    text: `Your OTP for login is: ${otp}\n\nThis OTP is valid for the next 5 minutes. Please do not share it with anyone.`,
   });
 };
 

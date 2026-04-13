@@ -2,7 +2,7 @@ const User = require("../models/User");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const otpGenerator = require("otp-generator");
-const sendSMS = require("../utils/sendSMS");
+const sendEmail = require("../utils/sendEmail");
 
 // Store OTPs with expiry: { email: { otp, expiresAt } }
 let otpStore = {};
@@ -68,19 +68,16 @@ exports.login = async (req, res) => {
 
     console.log("OTP:", otp); // For testing
 
-    // Send OTP via SMS
+    // Send OTP via Email
     try {
-      await sendSMS(user.phone, otp);
-      console.log("SMS sent to", user.phone);
-    } catch (smsError) {
-      console.log("SMS sending failed (Twilio may not be configured):", smsError.message);
+      await sendEmail(email, otp);
+      console.log("Email sent to", email);
+    } catch (emailError) {
+      console.log("Email sending failed (Nodemailer may not be configured):", emailError.message);
       console.log("Use the OTP from console log above for testing.");
     }
 
-    // Mask phone number for display
-    const maskedPhone = user.phone.replace(/.(?=.{4})/g, "*");
-
-    res.json({ message: `OTP sent to ${maskedPhone}`, email });
+    res.json({ message: `OTP sent to your email address`, email });
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: "Login error" });
