@@ -17,7 +17,7 @@ import {
 } from "@ant-design/icons";
 import API from "../api/axios";
 
-const { Title: AntTitle, Text, Paragraph } = Typography;
+const { Title: AntTitle, Text } = Typography;
 
 const SOURCE_COLORS = {
   "Economic Times": "gold",
