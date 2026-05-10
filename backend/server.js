@@ -15,6 +15,8 @@ const app = express();
 // Set security HTTP headers
 app.use(helmet());
 
+app.set("trust proxy", 1);
+
 // Rate limiting — general: 100 req/15min
 const generalLimiter = rateLimit({
   windowMs: 15 * 60 * 1000,

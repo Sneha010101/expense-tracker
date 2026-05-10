@@ -7,9 +7,8 @@ const sendEmail = require("../utils/sendEmail");
 // Helper: generate a 6-digit numeric OTP and save it to the user document
 const generateAndSaveOTP = async (user) => {
   const otp = otpGenerator.generate(6, {
-    digits: true,
-    alphabets: false,
-    upperCase: false,
+    upperCaseAlphabets: false,
+    lowerCaseAlphabets: false,
     specialChars: false,
   });
 
@@ -42,7 +41,10 @@ exports.register = async (req, res) => {
       password: hashedPassword,
     });
 
-    res.json({ message: "Registration successful", user: { name: user.name, email: user.email } });
+    res.json({
+      message: "Registration successful",
+      user: { name: user.name, email: user.email },
+    });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Register error" });
@@ -55,16 +57,16 @@ exports.login = async (req, res) => {
     const { email, password } = req.body;
 
     if (!email || !password) {
-      return res.status(400).json({ message: "Email and password are required" });
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
     }
 
     const user = await User.findOne({ email });
-    if (!user)
-      return res.status(400).json({ message: "User not found" });
+    if (!user) return res.status(400).json({ message: "User not found" });
 
     const match = await bcrypt.compare(password, user.password);
-    if (!match)
-      return res.status(400).json({ message: "Wrong password" });
+    if (!match) return res.status(400).json({ message: "Wrong password" });
 
     const otp = await generateAndSaveOTP(user);
 
@@ -94,8 +96,7 @@ exports.resendOTP = async (req, res) => {
     }
 
     const user = await User.findOne({ email });
-    if (!user)
-      return res.status(400).json({ message: "User not found" });
+    if (!user) return res.status(400).json({ message: "User not found" });
 
     const otp = await generateAndSaveOTP(user);
 
@@ -105,6 +106,10 @@ exports.resendOTP = async (req, res) => {
       await sendEmail(email, otp);
     } catch (emailError) {
       console.error("Email sending failed:", emailError.message);
+
+      return res.status(500).json({
+        message: "Failed to send OTP email",
+      });
     }
 
     res.json({ message: "A new OTP has been sent to your email address" });
@@ -125,14 +130,18 @@ exports.verifyOTP = async (req, res) => {
 
     const user = await User.findOne({ email });
     if (!user || !user.otp) {
-      return res.status(400).json({ message: "No OTP found. Please login again." });
+      return res
+        .status(400)
+        .json({ message: "No OTP found. Please login again." });
     }
 
     if (new Date() > user.otpExpiresAt) {
       user.otp = null;
       user.otpExpiresAt = null;
       await user.save();
-      return res.status(400).json({ message: "OTP expired. Please login again." });
+      return res
+        .status(400)
+        .json({ message: "OTP expired. Please login again." });
     }
 
     if (user.otp !== otp) {
@@ -144,11 +153,9 @@ exports.verifyOTP = async (req, res) => {
     user.otpExpiresAt = null;
     await user.save();
 
-    const token = jwt.sign(
-      { id: user._id },
-      process.env.JWT_SECRET,
-      { expiresIn: "7d" }
-    );
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, {
+      expiresIn: "7d",
+    });
 
     res.json({ token });
   } catch (error) {
